@@ -2,11 +2,12 @@
 <html>
 
 <head>
-    <title>GIS Indonesia</title>
+    <title>Latihan7</title>
     <link rel="stylesheet" href="https://openlayers.org/en/v3.20.1/css/ol.css" type="text/css">
     <!-- The line below is only needed for old environments like Internet
 Explorer and Android 4.x -->
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,El
+ement.prototype.classList,URL"></script>
     <script src="https://openlayers.org/en/v3.20.1/build/ol.js"></script>
     <style>
         #map:focus {
@@ -20,7 +21,6 @@ Explorer and Android 4.x -->
     <button id="zoom-out">Zoom out</button>
     <button id="zoom-in">Zoom in</button>
     <script>
-        var indonesiaExtent = [94.972, -11.06, 141.017, 6.348]; // Extent of Indonesia
         var map = new ol.Map({
             layers: [
                 new ol.layer.Tile({
@@ -29,18 +29,15 @@ Explorer and Android 4.x -->
             ],
             target: 'map',
             controls: ol.control.defaults({
-                attributionOptions: {
+                attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
                     collapsible: false
-                }
+                })
             }),
             view: new ol.View({
-                extent: indonesiaExtent, // Set the extent to Indonesia
-                zoom: 5, // Initial zoom level
-                minZoom: 2, // Minimum zoom level
-                maxZoom: 18 // Maximum zoom level
+                center: [0, 0],
+                zoom: 2
             })
         });
-
         document.getElementById('zoom-out').onclick = function () {
             var view = map.getView();
             var zoom = view.getZoom();
