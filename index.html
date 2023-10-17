@@ -22,16 +22,14 @@
 </head>
 
 <body>
+    <div id="map" class="map"></div>
     <div id="container">
         <button id="trackButton">Get My Location</button>
     </div>
-    <div id="map" class="map"></div>
     <div id="popup" title="Lokasi GPS">
         <p>Latitude: <span id="popupLatitude"></span></p>
         <p>Longitude: <span id="popupLongitude"></span></p>
     </div>
-    <p>Latitude: <span id="latitude"></span></p>
-    <p>Longitude: <span id="longitude"></span></p>
     <button id="zoom-out">Zoom out</button>
     <button id="zoom-in">Zoom in</button>
     <script>
@@ -50,7 +48,7 @@
 
         var dialog = $("#popup").dialog({
             autoOpen: false,
-            width: 250
+            modal: true,
         });
 
         document.getElementById('zoom-out').onclick = function () {
