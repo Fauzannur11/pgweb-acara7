@@ -2,67 +2,110 @@
 <html>
 
 <head>
-    <title>Latihan7</title>
+    <title>Leaflet.js</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <style>
         #map {
-            width: 100%;
-            height: 90%;
-        }
-
-        #map:focus {
-            outline: #4A74A8 solid 0.15em;
+            height: 1000px;
         }
     </style>
 </head>
 
 <body>
-    <div id="map" class="map"></div>
     <div id="container">
         <button id="trackButton">Get My Location</button>
     </div>
-    <div id="popup" title="Lokasi GPS">
-        <p>Latitude: <span id="popupLatitude"></span></p>
-        <p>Longitude: <span id="popupLongitude"></span></p>
-    </div>
-    <button id="zoom-out">Zoom out</button>
-    <button id="zoom-in">Zoom in</button>
+    <div id="map"></div>
     <script>
-        var map = new ol.Map({
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM()
-                })
-            ],
-            target: 'map',
-            view: new ol.View({
-                center: ol.proj.transform([110.36666105754671, -7.76464403814382], 'EPSG:4326', 'EPSG:3857'),
-                zoom: 9
-            })
-        });
+        var map = L.map('map').setView([-7.797068, 110.370529], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        // Tambah Titik
+        var marker = L.marker([-7.769105, 110.382994]).addTo(map);
 
-        var dialog = $("#popup").dialog({
-            autoOpen: false,
-            modal: true,
-        });
+        var circle = L.circle([-7.769105, 110.382994], {
+            color: 'purple',
+            fillColor: 'purple',
+            fillOpacity: 0.5,
+            radius: 300
+        }).addTo(map);
 
-        document.getElementById('zoom-out').onclick = function () {
-            var view = map.getView();
-            var zoom = view.getZoom();
-            view.setZoom(zoom - 1);
-        };
-        document.getElementById('zoom-in').onclick = function () {
-            var view = map.getView();
-            var zoom = view.getZoom();
-            view.setZoom(zoom + 1);
-        };
+        var polygon = L.polygon([
+            [-7.769510, 110.377294],
+            [-7.769967, 110.378704],
+            [-7.772146, 110.378037],
+            [-7.771807, 110.376613]
+        ]).addTo(map);
+
+        marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+        circle.bindPopup("Lingkaran");
+        polygon.bindPopup("Poligonnn");
+
+        var popup = L.popup()
+            .setLatLng([-7.769105, 110.382994])
+            .setContent("Hello, I'm popup")
+            .openOn(map);
+
+        function onMapClick(e) {
+            alert("kamu memilih lokasi di " + e.latlng);
+        }
+
+        map.on('click', onMapClick);
+
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("kamu memilih lokasi di " + e.latlng.toString())
+                .openOn(map);
+        }
+
+        var markers = [
+            {
+                name: "GSP UGM",
+                location: [-7.77025428839691, 110.37785230964978]
+            },
+            {
+                name: "Std. Kridosono",
+                location: [-7.787517870619622, 110.37404531798713]
+            },
+            {
+                name: "Std. Mandala Krida",
+                location: [-7.796276806686508, 110.38408750855432]
+            },
+            {
+                name: "Ring Road Utara",
+                location: [-7.759780768235346, 110.39034270396638]
+            }
+        ];
+
+        for (var i = 0; i < markers.length; i++) {
+            var marker = L.marker(markers[i].location).addTo(map);
+            marker.bindPopup(markers[i].name);
+        }
+
+
+
+        map.on('click', onMapClick);
 
         // Fungsi untuk melacak lokasi GPS
+
+        // Menambahkan event listener untuk tombol
+        var trackButton = document.getElementById("trackButton");
+        trackButton.addEventListener("click", trackLocation);
+
         function trackLocation() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(function (position) {
@@ -101,9 +144,9 @@
             }
         }
 
-        // Menambahkan event listener untuk tombol
-        var trackButton = document.getElementById("trackButton");
-        trackButton.addEventListener("click", trackLocation);
+
+
+
     </script>
 </body>
 
